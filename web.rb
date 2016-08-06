@@ -37,6 +37,31 @@ post '/charge' do
 
 end
 
+post '/createCustomer' do
+    
+    # Get the credit card details submitted by the form
+    token = params[:stripeToken]
+    email = params[:email]
+    
+    # Create the charge on Stripe's servers - this will charge the user's card
+    begin
+        # create a Customer
+        customer = Stripe::Customer.create(
+                                           card: token,
+                                           description: 'description for payinguser@example.com',
+                                           email: email
+                                           )
+                                       rescue Stripe::StripeError => e
+                                       status 402
+                                       return "Error creating customer: #{e.message}"
+    end
+    
+    status 200
+    content_type :json
+    customer.to_json
+    
+end
+
 get '/customers/:customer' do
 
   customer = params[:customer]
