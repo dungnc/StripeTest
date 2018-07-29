@@ -9,7 +9,24 @@ Stripe.api_key = ENV['STRIPE_TEST_SECRET_KEY']
 
 get '/' do
   status 200
-  return "Great, your backend is set up. Now you can configure the Stripe example iOS apps to point here."
+  return "Stdio.Hue - Kula Stripe Payment"
+end
+
+post '/ephemeral_keys' do
+    authenticate!
+    begin
+        key = Stripe::EphemeralKey.create(
+                                          {customer: @customer.id},
+                                          {stripe_version: params["api_version"]}
+                                          )
+                                          rescue Stripe::StripeError => e
+                                          status 402
+                                          return log_info("Error creating ephemeral key: #{e.message}")
+    end
+    
+    content_type :json
+    status 200
+    key.to_json
 end
 
 post '/charge' do
