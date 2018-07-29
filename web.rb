@@ -42,7 +42,7 @@ post '/charge' do
       :currency => params[:currency],
       :customer => customer,
       :source => source,
-      :description => "Example Charge"
+      :description => "Kula Charge"
     )
   rescue Stripe::StripeError => e
     status 402
@@ -65,7 +65,7 @@ post '/createCustomer' do
         # create a Customer
         customer = Stripe::Customer.create(
                                            card: token,
-                                           description: 'description for payinguser@example.com',
+                                           description: 'Created Kula Stripe Customer',
                                            email: email
                                            )
                                        rescue Stripe::StripeError => e
